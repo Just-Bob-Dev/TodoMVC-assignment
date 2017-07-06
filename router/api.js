@@ -22,6 +22,14 @@ router.get('/todos', function(req, res){
   })
 })
 
+const getTodo = function(req, res, next){
+  const todoId = req.params.todoId;
+  Todo.findById(todoId).then(function(todo){
+    req.todo = todo;
+    next();
+  })
+}
+
 
 router.post('/todos', function(req, res){
   const title = req.body.title,
@@ -38,7 +46,24 @@ router.post('/todos', function(req, res){
   })
 })
 
+router.get('/todos/:todoId', getTodo, function(req, res){
+  // const todoId = req.params.todoId;
+  // Todo.findById(todoId).then(function(todo){
+    res.json(req.todo.toJSON());
+  })
 
+
+router.put('/todos/:todoId', function(req, res){
+  // const todoId = req.params.todoId;
+  // Todo.findById(todoId).then(function(todo){
+  const todo = req.todo;
+  todo.title = req.body.title;
+  todo.completed = req.body.completed;
+  todo.order = req.body.order;
+  todo.save().then(function(){
+    res.json(todo);
+  })
+})
 
 
 module.exports = router;
