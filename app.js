@@ -1,8 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
-const sequelize = require('sequelize')
-const models = require('./models')
+const sequelize = require('sequelize');
+const models = require('./models');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const apiRouter = require('./router/api')
+
+mongoose.connect("mongodb://localhost:27017/todomvc")
 const app = express();
 
 app.use('/static', express.static('static'));
@@ -11,30 +16,7 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + "/static/index.html");
 })
 
-// put routes here
-app.get('/api/todos/', function(req, res){
-  models.Todo.findAll().then(function(todos){
-    console.log(todos);
-  //   if(todos){
-  //   res.json([{
-  //     id: todos.dataValues.id,
-  //     title: todos.dataValues.title,
-  //     order: todos.dataValues.order,
-  //     completed: todos.dataValues.completed
-  //   }]);
-  // }
-  // else{
-  //   res.redirect('/');
-  // }
-  })
-})
-
-app.post('/api/todos/', function(req, res){
-
-})
-
-
-
+app.use('/api', apiRouter);
 
 
 app.listen(3000, function () {
